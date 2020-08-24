@@ -1,0 +1,24 @@
+# permissions for end users to edit conjurs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: conjur-editor-role
+rules:
+- apiGroups:
+  - oss.cyberark.com
+  resources:
+  - conjurs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - oss.cyberark.com
+  resources:
+  - conjurs/status
+  verbs:
+  - get
