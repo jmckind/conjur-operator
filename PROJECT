@@ -1,0 +1,7 @@
+domain: cyberark.com
+layout: go.kubebuilder.io/v2
+projectName: conjur-operator
+repo: github.com/jmckind/conjur-operator
+version: 3-alpha
+plugins:
+  go.sdk.operatorframework.io/v2-alpha: {}
