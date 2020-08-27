@@ -1,0 +1,134 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: example-conjur-oss-pvc
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: pvc
+    app.kubernetes.io/name: example-conjur-oss
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: gp2
+  volumeMode: Filesystem
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: example-conjur-database-password
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: service
+    app.kubernetes.io/name: example-conjur-oss
+data:
+  key: c2VjcmV0
+type: Opaque
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: example-conjur-database-ssl
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: service
+    app.kubernetes.io/name: example-conjur-oss
+data:
+  tls.crt: >-
+    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM1RENDQWN5Z0F3SUJBZ0lSQVBxTzFvN3liNmdncTFsQ0luZ0V3WEF3RFFZSktvWklodmNOQVFFTEJRQXcKRFRFTE1Ba0dBMVVFQXhNQ2NHY3dIaGNOTWpBd09ESTJNVFF5TkRBMVdoY05NakV3T0RJMk1UUXlOREExV2pBTgpNUXN3Q1FZRFZRUURFd0p3WnpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBS1h0Cm5VNlk1a1hlR3FKSkdITUpoOWJCT3BmNVVJUG1uVU9iN24vS2RONTBMTEZuWVZxU2o2cU9kVzE2VUNZdjhFTkkKb0djZEJPMnFON3l2cEZEVlhPWXlqYWY0NGRPbHZrRjJGdTVuK09KQnlqUzNXTlVtdFZ1NkQ4N2RoVWJhM09JZwpONm1xQUQ0Q0hGb1pNZVpnNmMvVmVVaTQxVHM0SFJscVhHTkx5OExyV01NaFF1Yi9qYWlCeUVLVWpHcWhqcloyCmVIM2N3RHVRblAzdzFJcEErSk9ISHRVT1o1YWtBbDQ1WmV5RUJlUCtyL3pBRFprMWJlSTRLbUhXNW91OW5hdmoKc0FOd2xaeEZxSnp2a0dkT3BsdmYwMHRGcElubDZiWU8rU3lZOWl6b09ZSG9BQTdxVG0yME1yNXlJUmJmTTFwMAp6NEZyOERuYTZlVDNRL1htenljQ0F3RUFBYU0vTUQwd0RnWURWUjBQQVFIL0JBUURBZ1dnTUIwR0ExVWRKUVFXCk1CUUdDQ3NHQVFVRkJ3TUJCZ2dyQmdFRkJRY0RBakFNQmdOVkhSTUJBZjhFQWpBQU1BMEdDU3FHU0liM0RRRUIKQ3dVQUE0SUJBUUJGaHdXR0Y5VmNDNmhjMnVXOXJBOFhaVUdlRFB3OXdVNmROOVZrUCtUQm1QTk9BU0xnZ3hDTwp3dmpzSHhzQnlqeXplNi9EcS9QY1FEL2pwY1J4ZHg5M21jak94VDNNbnU3SXloakgxS2VpUThPRGtROWNSMHhBCkZWUm5TR3F4NnNHUUhhREdzbmovR1NQVitpK29Kd3VRSDhqOWxvT2x6MjJKUVpCSlhCbk1VaTRhQ0k3alErem4KclU5N2RLa1RPNStnMzJuNDMwTXlRWW5Wb2IydTJ4dm9FRnc3bGxFaUZiUlZXSCtnVmgyWnR4S0l2WWFCeUVPKwo4T0g2MnNERU5KeUF1MU5mNmFib0hxZkcyRXZWeTYvTHJ5ajEzZUNTeEVRZXlJVVlqTDRrRkdGQW5KUGh4a2RMCktSbGd4ekozeVRHSGZVOFBxU2dxL0FKZFoyZFczdC9yCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  tls.key: >-
+    LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb2dJQkFBS0NBUUVBcGUyZFRwam1SZDRhb2trWWN3bUgxc0U2bC9sUWcrYWRRNXZ1ZjhwMDNuUXNzV2RoCldwS1BxbzUxYlhwUUppL3dRMGlnWngwRTdhbzN2SytrVU5WYzVqS05wL2poMDZXK1FYWVc3bWY0NGtIS05MZFkKMVNhMVc3b1B6dDJGUnRyYzRpQTNxYW9BUGdJY1doa3g1bURwejlWNVNMalZPemdkR1dwY1kwdkx3dXRZd3lGQwo1ditOcUlISVFwU01hcUdPdG5aNGZkekFPNUNjL2ZEVWlrRDRrNGNlMVE1bmxxUUNYamxsN0lRRjQvNnYvTUFOCm1UVnQ0amdxWWRibWk3MmRxK093QTNDVm5FV29uTytRWjA2bVc5L1RTMFdraWVYcHRnNzVMSmoyTE9nNWdlZ0EKRHVwT2JiUXl2bkloRnQ4elduVFBnV3Z3T2RycDVQZEQ5ZWJQSndJREFRQUJBb0lCQUN1d2JRTU03MVRtTGswYwp3ZnRJUHlRa3JMRG5USFB1Zk9vWVhLdjVPdHgzNm15cnM4Nk5XSmFuKy9OZmlVc0V4Rlp6QVFrbGN1N0JLdnZiCm80QkZMYmpQQnMxN2tycVBvWkRLN3k3RzRabHhpVFJvTWxPdFpZTkpjbkFkazhJY1RweWJyd3hWWHNyMDgxSWwKNENXd3p0K1NiZVRnQmdVWnVVKy8yYU9yaVhOQTUrbmRVRFlWY2cycFgwaFkzdVFKOWozQWxDcVBkY3cyV2pZYQozclMwejJZVmRQZ20vbjliam1QcDNLb0JpYTAyQjRWb0xrYWV4L3JPYTllRDBUc0NHZzdFUGFPYk1JOGxKRVkxCmVDWnNMTGxVdDBrYnFQT0V5ZTJPK3laSkJlMnU3c1ZzM2VRWlFlejV6Y05JZzM5VTJvdzBaQnR3S1huZVNRZDEKZ2tGQm9JRUNnWUVBdy9YdTFBNXZmY0JVMHlzdTcyZHVVUnFRRmpoTFdFakkrSlJpY3FteEtzQ2h6dHNHWTlaOQpyR01OYnhwSUw3YnduTFdhRnJxOXNibFBhYzdRdDRJSmNHMVRHckEvR2NhbVowelBwSE54OFRsaklZSjZ2cWUzClNlbEo0WFZrdkRBYzd1ZTdnS0IwdWpTQkZUb21maEFxL3QxeU93NHZReWwrUUJwYzBPdHB1ZjhDZ1lFQTJNUVoKZW91U2J3dCtFRDZQWnJPTkROV1krVThncHN2S1J0TGZJbU5NY3h0VzJOcWozYTE4YWlwSkNIS2FCRDVqR2QrSwp5bUZyUzBTMGJ0VUVaSFo4clN3VFRwZUs2TUJMRHRLbWlIQXRtbGxxaHRwdXhPYllKRldaSzFiRmJyTzdVbDdsCm1EalR1V1hFNzcrTFJPbWZEVEE4MlVuOWxROU1INDhMeEQwYjJ0a0NnWUJYQkdpUGhmR0FWOTNTLzhRUnowNHYKZWFvdUU4VnhhTERGb2E2dDJDaXlJV1E0NVEzTFc3M214UDE4THFHTGZxTU9FNTVmSllHQzRCVWhtUk1aeWdiRApBK2o1V3ZaS1Rlb3F5UE1UeGFmOVJFeCszdC8rdFo4d2xRV1h0bmVMRVpwbmhFUEE5SCtoQ0J1aC8zYUVXRTJmCmExcUVXdUlsNHRFTFNpbVpKRkNJcFFLQmdIcmVUUUxsY2s5M1dER2xCR3ZXZ3JFdnNkSS9RK2JIeFJSNEd2ckgKQm1LSXNLV2k2UmVTYXQ5U3NLc1ZLckFWSE45aGtxNDhvakM3OVBxTnpEdVYzZjNhNmVhMmg0cCsxUXpGNHBlYgozbjJMQ1pMKzVhSytwdTJSaDR6RlZvdjFYTXpIOWFSZk1jUDVKN1F1QXFkQk5XS29ZUlZabDErU21EZWJRYlF1ClgwZWhBb0dBU2FTY0tvUmg0SFExMXJmVmZuV1pNMXdqUm9ESjE0OGh1UFBLYWZPdjNtU2w5RjNFdWppK2lQRCsKWWdoOGtlZmdnNjJJRjc1WWNxSUNMa0NVMUlFNGpHTThIWmtPZHBWMkxndE5YcGk4NDIxeit4cXcxQlM3TytzNApBdzNnSXl6NEU3QXo4Q1piOTlzVVB4bzdHY3JuUXppZGM1RnJpSER4MW55ZUJJMy9SQnM9Ci0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0tCg==
+type: kubernetes.io/tls
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: example-conjur-database-url
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: service
+    app.kubernetes.io/name: example-conjur-oss
+data:
+  key: WHRMVU96ejBrZTZaQVYyZHhqTDBQTkN0MWIzZ2pqckQzWjI5UEpqSGVhbz0=
+type: Opaque
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: example-conjur-postgres
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: postgres
+    app.kubernetes.io/name: example-conjur-oss
+spec:
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: conjur-oss
+    app.kubernetes.io/component: postgres
+    app.kubernetes.io/name: example-conjur-oss
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: example-conjur-postgres
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: postgres
+    app.kubernetes.io/name: example-conjur-oss
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conjur-oss
+      app.kubernetes.io/component: postgres
+      app.kubernetes.io/name: example-conjur-oss
+  serviceName: example-conjur-postgres
+  template:
+    metadata:
+      labels:
+        app: conjur-oss
+        app.kubernetes.io/component: postgres
+        app.kubernetes.io/name: example-conjur-oss
+    spec:
+      containers:
+      - name: postgres
+        args:
+        - /usr/bin/run-postgresql
+        - '-c'
+        - ssl=on
+        - '-c'
+        - ssl_cert_file=/etc/certs/tls.crt
+        - '-c'
+        - ssl_key_file=/etc/certs/tls.key
+        env:
+        - name: POSTGRESQL_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: key
+              name: example-conjur-database-password
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        image: registry.access.redhat.com/rhscl/postgresql-10-rhel7
+        imagePullPolicy: IfNotPresent
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-data
+        - mountPath: /etc/certs
+          name: ssl-certs
+          readOnly: true
+      restartPolicy: Always
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: example-conjur-oss-pvc
+      - name: ssl-certs
+        secret:
+          defaultMode: 384
+          secretName: example-conjur-database-ssl

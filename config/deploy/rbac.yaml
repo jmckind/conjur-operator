@@ -1,0 +1,64 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: example-conjur-authenticator
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/name: example-conjur-oss  
+rules:
+  - verbs:
+      - get
+      - list
+    apiGroups:
+      - ''
+    resources:
+      - pods
+      - serviceaccounts
+  - verbs:
+      - get
+      - list
+    apiGroups:
+      - extensions
+    resources:
+      - deployments
+      - replicasets
+  - verbs:
+      - get
+      - list
+    apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+      - replicasets
+  - verbs:
+      - create
+      - get
+    apiGroups:
+      - ''
+    resources:
+      - pods/exec
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: example-conjur-authenticator
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/name: example-conjur-oss
+subjects:
+  - kind: ServiceAccount
+    name: example-conjur-oss
+    namespace: conjur
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: example-conjur-authenticator
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: example-conjur-oss
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/name: example-conjur-oss

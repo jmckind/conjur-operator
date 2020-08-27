@@ -1,0 +1,467 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: example-conjur-nginx-configmap
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/name: example-conjur-oss
+data:
+  conjur_site: |
+    server {
+      ssl_certificate /opt/conjur/etc/ssl/cert/tls.crt;
+      ssl_certificate_key /opt/conjur/etc/ssl/cert/tls.key;
+
+      ssl_client_certificate /opt/conjur/etc/ssl/ca/tls.crt;
+
+      ssl_verify_client optional_no_ca;
+
+      listen 9443 ssl;
+      listen [::]:9443 ssl;
+
+      proxy_set_header Conjur-Forwarded-Host $http_host;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Real_IP $remote_Addr;
+      proxy_set_header X-Forwarded_For $proxy_add_x_forwarded_for;
+      proxy_set_header X-SSL-Client-Certificate $ssl_client_escaped_cert;
+
+      # Container health status
+      location /status {
+        access_log off;
+        return 200 'OK';
+      }
+
+      location / {
+        proxy_pass http://127.0.0.1:8000;
+      }
+    }
+
+    server {
+      # redirect outside unencrypted access to https
+      listen 9000;
+      listen [::]:9000;
+      return 301 https://$host$request_uri;
+    }
+  dhparams: |
+    -----BEGIN DH PARAMETERS-----
+    MIIBCAKCAQEAhg2rRNwhgO8Nxc363bnKNKxb7xP8BXdQBnEHNxtqfpPRQViiP8K9
+    fMHHvN5/QAeB0hCOEg6dhbYurOcT9ZfFy9BSC9QFTixfDmMHe9MT1VIYqvsXVyjO
+    l/ivdCW0/eMZ5sc1Fcleym+TQzzrgnI0Kad17tmq4tvBKky+0YY4Q/M9BupZ7omc
+    fyqhY+LyEqIjWuCd3eE7YQIonOrXJ+8xuOjl5uilFu4Zz+i4KeELmAG1WaOjvg+Z
+    dJcve9soB3uaJW45jS/7cRl94VPJsfCJC/Z6E2R6CSPDgvytxL8aAM5FCyMQljN3
+    vS9xNgsWz5gZqU3gbxW2dRgedjEvW5VHMwIBAg==
+    -----END DH PARAMETERS-----
+  mime_types: |
+    types {
+      text/html                                        html htm shtml;
+      text/css                                         css;
+      text/xml                                         xml;
+      image/gif                                        gif;
+      image/jpeg                                       jpeg jpg;
+      application/javascript                           js;
+      application/atom+xml                             atom;
+      application/rss+xml                              rss;
+
+      text/mathml                                      mml;
+      text/plain                                       txt;
+      text/vnd.sun.j2me.app-descriptor                 jad;
+      text/vnd.wap.wml                                 wml;
+      text/x-component                                 htc;
+
+      image/png                                        png;
+      image/svg+xml                                    svg svgz;
+      image/tiff                                       tif tiff;
+      image/vnd.wap.wbmp                               wbmp;
+      image/webp                                       webp;
+      image/x-icon                                     ico;
+      image/x-jng                                      jng;
+      image/x-ms-bmp                                   bmp;
+
+      font/woff                                        woff;
+      font/woff2                                       woff2;
+
+      application/java-archive                         jar war ear;
+      application/json                                 json;
+      application/mac-binhex40                         hqx;
+      application/msword                               doc;
+      application/pdf                                  pdf;
+      application/postscript                           ps eps ai;
+      application/rtf                                  rtf;
+      application/vnd.apple.mpegurl                    m3u8;
+      application/vnd.google-earth.kml+xml             kml;
+      application/vnd.google-earth.kmz                 kmz;
+      application/vnd.ms-excel                         xls;
+      application/vnd.ms-fontobject                    eot;
+      application/vnd.ms-powerpoint                    ppt;
+      application/vnd.oasis.opendocument.graphics      odg;
+      application/vnd.oasis.opendocument.presentation  odp;
+      application/vnd.oasis.opendocument.spreadsheet   ods;
+      application/vnd.oasis.opendocument.text          odt;
+      application/vnd.openxmlformats-officedocument.presentationml.presentation
+                                                       pptx;
+      application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+                                                       xlsx;
+      application/vnd.openxmlformats-officedocument.wordprocessingml.document
+                                                       docx;
+      application/vnd.wap.wmlc                         wmlc;
+      application/x-7z-compressed                      7z;
+      application/x-cocoa                              cco;
+      application/x-java-archive-diff                  jardiff;
+      application/x-java-jnlp-file                     jnlp;
+      application/x-makeself                           run;
+      application/x-perl                               pl pm;
+      application/x-pilot                              prc pdb;
+      application/x-rar-compressed                     rar;
+      application/x-redhat-package-manager             rpm;
+      application/x-sea                                sea;
+      application/x-shockwave-flash                    swf;
+      application/x-stuffit                            sit;
+      application/x-tcl                                tcl tk;
+      application/x-x509-ca-cert                       der pem crt;
+      application/x-xpinstall                          xpi;
+      application/xhtml+xml                            xhtml;
+      application/xspf+xml                             xspf;
+      application/zip                                  zip;
+
+      application/octet-stream                         bin exe dll;
+      application/octet-stream                         deb;
+      application/octet-stream                         dmg;
+      application/octet-stream                         iso img;
+      application/octet-stream                         msi msp msm;
+
+      audio/midi                                       mid midi kar;
+      audio/mpeg                                       mp3;
+      audio/ogg                                        ogg;
+      audio/x-m4a                                      m4a;
+      audio/x-realaudio                                ra;
+
+      video/3gpp                                       3gpp 3gp;
+      video/mp2t                                       ts;
+      video/mp4                                        mp4;
+      video/mpeg                                       mpeg mpg;
+      video/quicktime                                  mov;
+      video/webm                                       webm;
+      video/x-flv                                      flv;
+      video/x-m4v                                      m4v;
+      video/x-mng                                      mng;
+      video/x-ms-asf                                   asx asf;
+      video/x-ms-wmv                                   wmv;
+      video/x-msvideo                                  avi;
+    }
+  nginx_conf: |
+    worker_processes auto;
+
+    # Allow running nginx as a non-root user
+    pid /tmp/nginx.pid;
+
+    events {
+        worker_connections 768;
+    }
+
+    http {
+        # Allow running nginx as a non-root user
+        client_body_temp_path /tmp/client_temp;
+        proxy_temp_path       /tmp/proxy_temp_path;
+        fastcgi_temp_path     /tmp/fastcgi_temp;
+        uwsgi_temp_path       /tmp/uwsgi_temp;
+        scgi_temp_path        /tmp/scgi_temp;
+
+        server_tokens off;
+        include       mime.types;
+        default_type  application/octet-stream;
+
+        sendfile        on;
+        keepalive_timeout  65;
+        client_max_body_size 10M;
+        proxy_read_timeout 600s;
+
+        # Prevent DoS attacks
+        reset_timedout_connection on;
+
+        # Speed up SSL connections
+        ssl_session_timeout 10m;
+        ssl_session_cache   shared:SSL:10m;
+
+        # Custom security-minded SSL settings
+        ssl_dhparam /etc/nginx/dhparams.pem;
+        ssl_protocols TLSv1.3 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        ssl_ciphers 'ALL:!RSA:!SHA:!aNULL:!eNULL:!EXPORT:!MEDIUM:!LOW:!CAMELLIA:!3DES:!DES:!MD5:!PSK:!RC4:!DSS:!SRP:!DSS:!SEED:!SSLv3:!SSLv2:!IDEA:!aGOST';
+
+        log_format syslog '$http_host '
+                          '$remote_addr '
+                          '"$request" $status $body_bytes_sent '
+                          '"$http_referer" "$http_user_agent" '
+                          '$request_time '
+                          '$upstream_response_time';
+
+        access_log /var/log/nginx/access.log syslog;
+
+        # Don't ever retry failed requests. In spite of the name, this
+        # prevents retries even if there's only a single upstream.
+        proxy_next_upstream off;
+
+        include /etc/nginx/sites-enabled/*;
+    }
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: example-conjur-oss-tests
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/name: example-conjur-oss
+data:
+  run.sh: |-
+    @test "Testing that Conjur status page is up" {
+      curl -f --cacert /cacert/tls.crt https://example-conjur-oss/ | grep 'Status'
+    }
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: example-conjur-oss
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: service
+    app.kubernetes.io/name: example-conjur-oss
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conjur-oss
+      app.kubernetes.io/component: service
+      app.kubernetes.io/name: example-conjur-oss
+  template:
+    metadata:
+      labels:
+        app: conjur-oss
+        app.kubernetes.io/component: service
+        app.kubernetes.io/name: example-conjur-oss
+    spec:
+      restartPolicy: Always
+      serviceAccountName: example-conjur-oss
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      securityContext: {}
+      containers:
+        - resources: {}
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: https
+              scheme: HTTPS
+            initialDelaySeconds: 1
+            timeoutSeconds: 3
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 180
+          terminationMessagePath: /dev/termination-log
+          name: nginx
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: https
+              scheme: HTTPS
+            initialDelaySeconds: 1
+            timeoutSeconds: 3
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 180
+          ports:
+            - name: https
+              containerPort: 9443
+              protocol: TCP
+            - name: http
+              containerPort: 9000
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: conjur-ssl-cert-volume
+              readOnly: true
+              mountPath: /opt/conjur/etc/ssl/cert
+            - name: conjur-ssl-ca-cert-volume
+              readOnly: true
+              mountPath: /opt/conjur/etc/ssl/ca
+            - name: conjur-configmap-volume
+              readOnly: true
+              mountPath: /etc/nginx
+          terminationMessagePolicy: File
+          image: 'nginx:1.15'
+        - resources: {}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 1
+            timeoutSeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 180
+          terminationMessagePath: /dev/termination-log
+          name: conjur-oss
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 1
+            timeoutSeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 180
+          args:
+            - server
+          env:
+            - name: CONJUR_AUTHENTICATORS
+              valueFrom:
+                secretKeyRef:
+                  name: example-conjur-authenticators
+                  key: key
+            - name: CONJUR_DATA_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: example-conjur-data-key
+                  key: key
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: example-conjur-database-url
+                  key: key
+            - name: CONJUR_ACCOUNT
+              value: default
+            - name: PORT
+              value: "8000"
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          terminationMessagePolicy: File
+          image: guygiat/conjur-oss-ocp
+      serviceAccount: example-conjur-oss
+      volumes:
+        - name: conjur-ssl-cert-volume
+          secret:
+            secretName: example-conjur-ssl-cert
+            defaultMode: 256
+        - name: conjur-ssl-ca-cert-volume
+          secret:
+            secretName: example-conjur-ssl-ca-cert
+            defaultMode: 256
+        - name: conjur-configmap-volume
+          configMap:
+            name: example-conjur-nginx-configmap
+            items:
+              - key: nginx_conf
+                path: nginx.conf
+              - key: mime_types
+                path: mime.types
+              - key: dhparams
+                path: dhparams.pem
+              - key: conjur_site
+                path: sites-enabled/conjur.conf
+            defaultMode: 420
+      dnsPolicy: ClusterFirst
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: example-conjur-oss
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: route
+    app.kubernetes.io/name: example-conjur-oss
+spec:
+  to:
+    kind: Service
+    name: example-conjur-oss
+    weight: 100
+  port:
+    targetPort: https
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: example-conjur-authenticators
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: service
+    app.kubernetes.io/name: example-conjur-oss
+data:
+  key: YXV0aG4=
+type: Opaque
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: example-conjur-data-key
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: service
+    app.kubernetes.io/name: example-conjur-oss
+data:
+  key: c2VjcmV0
+type: Opaque
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: example-conjur-ssl-ca-cert
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: ssl-cert
+    app.kubernetes.io/name: example-conjur-oss
+data:
+  tls.crt: >-
+    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMvRENDQWVTZ0F3SUJBZ0lRY2JHaTRMSk1ldXdkVGpxeXZHYjlsREFOQmdrcWhraUc5dzBCQVFzRkFEQVkKTVJZd0ZBWURWUVFERXcxamIyNXFkWEl0YjNOekxXTmhNQjRYRFRJd01EZ3lOakUwTWpRd05Wb1hEVEl4TURneQpOakUwTWpRd05Wb3dHREVXTUJRR0ExVUVBeE1OWTI5dWFuVnlMVzl6Y3kxallUQ0NBU0l3RFFZSktvWklodmNOCkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFOWDZEY2dmNmRQTTNKaDBKeHJweVhQQXhPNVdiRmJ0eDVMMUE3TlUKZVpxUWtDZWZQUzJJeFpoTm5Ia016ZjFrR1JqcGpKcmpRNUZMWjd4bi9BTnVaU08rdlp1NENqbDBHNkkrc3dlWAo3bzhJeDFxZFpORG5rb3lYSXNEWjhUem93bHhxWnNFYlhka0hLSUpoSUw5SmNTU05NN0pxR3d2TDZvejhmbVhvClpKWkRYSVhWUGxaRjhLTlprZEtBRHpXZ3ppWjJ3cFZtNjJwZVRsSmRBdXdad2hkZ0ZvWUNQOXV1NkgrUi82WGYKT1lCT0ViRWRMM050SlhBeTZHd3JIOEhBSDRaeWZOUjBEMjhPMUFhZWxpN2NCMlh2KzgzMXQ3T2hkTHpsbVlMdwpUejYrb2hQQ3ZRNGdxTFNsQzNHWE1DMXhzK0dyTVJKNStzZUNuUjZrbXRPSmZrMENBd0VBQWFOQ01FQXdEZ1lEClZSMFBBUUgvQkFRREFnS2tNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUZCUWNEQWpBUEJnTlYKSFJNQkFmOEVCVEFEQVFIL01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRRERCRDY0ZWdjU0NYd2k1c1EvME9NVgpCNmZMZ3F5MnhCRmRDYVVTWnduRGNMT2MrRWovR0dVclRjaXNtcjU2UkJNU0Y2ei9RYnJicVlZK3Vwd1lMc09ZCmJNMmtBYVRaQWFiM0F2VkxLd2oxS09nR05kQ0xTRmNyd25scXJ5Zm5HT2tWN3hCakdFZUYrbUhJTElLNXJWV20KaUY3YzBtaHN3dUplYWtQM1FEWG5xVjBBWlM0Y2N5RzdzZnFHdGhGcEFkNzFRb3B2VisyYnpISUt6MytOZjR5bQo0NVNlUGo4alg4RWY0MTZzY09HTDg1bTZ5OUFhNVFkcnlqUkVaQ2ZMSVRoKzFBYzhFa2MweDZTYW9ETFdCMDhmClcyU2pDVEVWUUF2UitlWW1qWFBjaFVYUmVYQjVFbGNEeS8rZWlWM0lJaHBlajUyRmsrbUZRaml3QU04TmdZeEsKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+  tls.key: >-
+    LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBMWZvTnlCL3AwOHpjbUhRbkd1bkpjOERFN2xac1Z1M0hrdlVEczFSNW1wQ1FKNTg5CkxZakZtRTJjZVF6Ti9XUVpHT21NbXVORGtVdG52R2Y4QTI1bEk3NjltN2dLT1hRYm9qNnpCNWZ1andqSFdwMWsKME9lU2pKY2l3Tm54UE9qQ1hHcG13UnRkMlFjb2dtRWd2MGx4SkkwenNtb2JDOHZxalB4K1plaGtsa05jaGRVKwpWa1h3bzFtUjBvQVBOYURPSm5iQ2xXYnJhbDVPVWwwQzdCbkNGMkFXaGdJLzI2N29mNUgvcGQ4NWdFNFJzUjB2CmMyMGxjRExvYkNzZndjQWZobko4MUhRUGJ3N1VCcDZXTHR3SFplLzd6ZlczczZGMHZPV1pndkJQUHI2aUU4SzkKRGlDb3RLVUxjWmN3TFhHejRhc3hFbm42eDRLZEhxU2EwNGwrVFFJREFRQUJBb0lCQUJYWlpyYmNxMSs1TjMxSgp2d1I4Z3RtVEFZamt3a05PSEdiaEpmT1YyS1R6eGdTRnVoV0FOYzBMZjhMTWord2o0SHd1dlBERDdBNVdDTTJ3ClFJZUpLa0t3STJSWE1wUVRTdzhTSCszU2tjV0JPL29Bd0Y2a2hzNWNVR3dvMVAxSE56R0FtK1YwQ2UwelVldWUKUjEzQS9oQ2hhbm41WTdHY3JPS2dsYmVLTjFzd2JkdkhLTFpPc1VCc2Y3a2s1RGdwT2g0eVRaWlQrRHlCaXBYSQpZdnhMRFFhQ2lMdG0xWUpEQWNuKzZGZm5uWGpwU1d4QVd4d0EwbnN6V2hBUjVEWVc1cllMSktzZkV6N3o0YTJvCjJTakZad016MWRQWG91ajgyYnJLMnN2dkNrVXdUdmUxMkdGaFlDWnNaMEtVOXlPK1orWWhnUFBHWVQ0Z2QrK1YKcFNzTzVZRUNnWUVBNHNLN2dkTUFqeHhoMzYydzhyWlJKNTBUNDBEb1Myb3NNeDBYTXVoUnE2bzR6RlRoeFVycwppYkp6ZnlnVjhpU3hDNU5hMHlGOVNNdGpHZHQ0V0VqZ3lFN2JLWWJDT0R3RWNvQzRMSHZEMnVZOWRIYVFIRkpwCnJ6dyttVDhyenUwd0dHdklnMUtuNlVxTGFSNGFQeG1GQ3JZaWorQ3lDUFVpTi91OW5QcUZLbmtDZ1lFQThaRlUKb1RncFpUdkV2QzRlb1BpWmVLYzFieVN4ZTJsQVh5eVhDVGU2NEtnOFNFZ1lvOWFyUXpnMG1hRy9SNlROdjF6agpTTGhQR082bVNtRWNnUldZNitvKzdoSlZVNjNMZDFpQ2lYY3FpMWpmNzQ4eFVvVGhYWGF2RE52TU9JdE1sS3c3CkdoWk1LU2h2RzJjUTJFTCt1dzE5Q1F1TlRMSUdNRENkRGdwd2ZYVUNnWUVBMTEwQlB0ektoQ0Q5cDdYTC84ZysKTFhSVzVoZklSNC9QNkwreFA4MDdlK0dRVGlnendQQlcxTFJpVXhzY05MeTZWWGNlNUxUQ3kzYzNhT0J6WE0zaQpodnUxMUt2REhDdU1RYitVcTlMa0FhdDRKSHRTaFVPVVVqVFNjek4zQlBGcUkxZUN1WTZ3SUxhR3oxQWl0MWtpCmJUanNmRjk0VjErUm56LzlKdkVidG1rQ2dZQmtDWTlHaEgrQUVOUlVLYlU5YkRZQ0pSeVh2bFpSaVRERE9UQUMKL1RWQ3UramE5aUJlR1JRcmJpYzZTQ1Z5Z2VsQ2lqRUZlRzRwSVF0MFdlcjMrZjJ1RlAraWo2ME9UamFvWWRzTgpHbkJmN0pvd0Z0aVNGNzFNZTAzYXdWczlQMUtqYnYrNnVla29VanBRMnNtN0JXT0FDd0h3c1B2Kyt1cGRJb1NuCnYrTDkwUUtCZ0RxM1gzMXlHaGNTTnZGVzI2T3pjTWxpN3BlUW53dTFRTzBFR0k5UzFsOUxrak56UGNPWGphNFYKZnl2VTEvS2hUeUdMaittV3htZjlOQldnWkh1blFIV2ZCVnhiOWtHYVNoS211VklYdnpNK3pDKzBwMWJjdTBYLwpIVGlYT2lsUVdreEk3SHBMMTFGS3luV290SlIzV005U0NQNjN1NGJENTRheUdyQ3FUN09rCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0tCg==
+type: kubernetes.io/tls
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: example-conjur-ssl-cert
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: ssl-cert
+    app.kubernetes.io/name: example-conjur-oss
+data:
+  tls.crt: >-
+    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURvVENDQW9tZ0F3SUJBZ0lRQmJOUXlIemVVSDYrbEh1MDZDNDAxREFOQmdrcWhraUc5dzBCQVFzRkFEQVkKTVJZd0ZBWURWUVFERXcxamIyNXFkWEl0YjNOekxXTmhNQjRYRFRJd01EZ3lOakUwTWpRd05Wb1hEVEl4TURneQpOakUwTWpRd05Wb3dHekVaTUJjR0ExVUVBeE1RWTI5dWFuVnlMbTE1YjNKbkxtTnZiVENDQVNJd0RRWUpLb1pJCmh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTklFYjk2dzFWMnB6U0Y2WitSbTRYSlJ1TkF1WWJYSjViTHIKVE5PMUg0aC9WUFVUa20xUlV0OGQ2UGJtNHEwTENZamlYdUVGY0FWbnMzdUNQdEZ4ZnA1V3YyL0ZyVlh5T0ZGNQpDUTFQQTNpYU1rT2M1NDU2c21pZnJQTVBoNnMvcDQ0SDhLdjNjZDI4dVluclBlbS9ld1FtdWtUQTdMNFBKTFRCCkNxY0tRL25RMjhJMkhzdFFoUVV1bTg1UTB2MnRZWkd2WTRnSVhVMmk4bGkxa3dKamd0NkxraU0vbVNNRlErSXQKOGJYMkZtQjhBbHJVaDhDbS9oVHQ0THJrVEVGU1JGdWppampBWVZjdkVYeVNTMWZ3bUF0Y1cvTVZSRTI2amd4Vwoyb3prTkRnUStIY0R4TklvM1VGdjlCakp0RE9tVGJPNldleG1BT1k5R2xmTTJFdkwxMGtDQXdFQUFhT0I0ekNCCjREQU9CZ05WSFE4QkFmOEVCQU1DQmFBd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSEF3RUdDQ3NHQVFVRkJ3TUMKTUF3R0ExVWRFd0VCL3dRQ01BQXdnYUFHQTFVZEVRU0JtRENCbFlJUVkyOXVhblZ5TG0xNWIzSm5MbU52YllJVQpiWGt0WTI5dWFuVnlMV052Ym1wMWNpMXZjM09DRzIxNUxXTnZibXAxY2kxamIyNXFkWEl0YjNOekxtTnZibXAxCmNvSWZiWGt0WTI5dWFuVnlMV052Ym1wMWNpMXZjM011WTI5dWFuVnlMbk4yWTRJdGJYa3RZMjl1YW5WeUxXTnYKYm1wMWNpMXZjM011WTI5dWFuVnlMbk4yWXk1amJIVnpkR1Z5TG14dlkyRnNNQTBHQ1NxR1NJYjNEUUVCQ3dVQQpBNElCQVFDV2pqc3VwWU9NNzNhSGRQY0E4K1N5eTU3eVRXMlp5eFZRSWVlc1JJeEorSlVaWnVNbXNadlh1VW41CnhTRXV0cHcxK0VQTDlPWmlIeUM5VzEwTnRPb1A0My9yK3lmRUVmUFVibjc3UGNRdmhrYUhnOHBYdXJHVXJWY3kKNEpWSk5ZNFFDeUFwTlJLY3owQ3RIMjR3VlN3cnNXaHN0bzd2NnBBY2lFRGVRNXZpd05Sbnd0NHVrdXlmaGZsYwppVlpGRVZsVjhMa0NWNEgzMzFGUUJUWWtNbVRwek0xeDRjNUdwOCt3aUpzQXE3Q2xRZ2xDZFBranBZblhaWUtMCk1NaktyMUsyUHF6M3NGRU94b0UrYk1WYUplOG10VE5JekF2bC95eDUwRkM4MlZkUDJTTlRNeFZaNVdLalVPajIKc3VsS0g4bmYxZzhhYXE5M0RxRzhYdkJlNVI0SQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCgotLS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJQy9EQ0NBZVNnQXdJQkFnSVFjYkdpNExKTWV1d2RUanF5dkdiOWxEQU5CZ2txaGtpRzl3MEJBUXNGQURBWQpNUll3RkFZRFZRUURFdzFqYjI1cWRYSXRiM056TFdOaE1CNFhEVEl3TURneU5qRTBNalF3TlZvWERUSXhNRGd5Ck5qRTBNalF3TlZvd0dERVdNQlFHQTFVRUF4TU5ZMjl1YW5WeUxXOXpjeTFqWVRDQ0FTSXdEUVlKS29aSWh2Y04KQVFFQkJRQURnZ0VQQURDQ0FRb0NnZ0VCQU5YNkRjZ2Y2ZFBNM0poMEp4cnB5WFBBeE81V2JGYnR4NUwxQTdOVQplWnFRa0NlZlBTMkl4WmhObkhrTXpmMWtHUmpwakpyalE1RkxaN3huL0FOdVpTTyt2WnU0Q2psMEc2SStzd2VYCjdvOEl4MXFkWk5EbmtveVhJc0RaOFR6b3dseHFac0ViWGRrSEtJSmhJTDlKY1NTTk03SnFHd3ZMNm96OGZtWG8KWkpaRFhJWFZQbFpGOEtOWmtkS0FEeldnemlaMndwVm02MnBlVGxKZEF1d1p3aGRnRm9ZQ1A5dXU2SCtSLzZYZgpPWUJPRWJFZEwzTnRKWEF5Nkd3ckg4SEFINFp5Zk5SMEQyOE8xQWFlbGk3Y0IyWHYrODMxdDdPaGRMemxtWUx3ClR6NitvaFBDdlE0Z3FMU2xDM0dYTUMxeHMrR3JNUko1K3NlQ25SNmttdE9KZmswQ0F3RUFBYU5DTUVBd0RnWUQKVlIwUEFRSC9CQVFEQWdLa01CMEdBMVVkSlFRV01CUUdDQ3NHQVFVRkJ3TUJCZ2dyQmdFRkJRY0RBakFQQmdOVgpIUk1CQWY4RUJUQURBUUgvTUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCQVFEREJENjRlZ2NTQ1h3aTVzUS8wT01WCkI2ZkxncXkyeEJGZENhVVNad25EY0xPYytFai9HR1VyVGNpc21yNTZSQk1TRjZ6L1FicmJxWVkrdXB3WUxzT1kKYk0ya0FhVFpBYWIzQXZWTEt3ajFLT2dHTmRDTFNGY3J3bmxxcnlmbkdPa1Y3eEJqR0VlRittSElMSUs1clZXbQppRjdjMG1oc3d1SmVha1AzUURYbnFWMEFaUzRjY3lHN3NmcUd0aEZwQWQ3MVFvcHZWKzJiekhJS3ozK05mNHltCjQ1U2VQajhqWDhFZjQxNnNjT0dMODVtNnk5QWE1UWRyeWpSRVpDZkxJVGgrMUFjOEVrYzB4NlNhb0RMV0IwOGYKVzJTakNURVZRQXZSK2VZbWpYUGNoVVhSZVhCNUVsY0R5LytlaVYzSUlocGVqNTJGayttRlFqaXdBTThOZ1l4SwotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+  tls.key: >-
+    LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBMGdSdjNyRFZYYW5OSVhwbjVHYmhjbEc0MEM1aHRjbmxzdXRNMDdVZmlIOVU5Uk9TCmJWRlMzeDNvOXViaXJRc0ppT0plNFFWd0JXZXplNEkrMFhGK25sYS9iOFd0VmZJNFVYa0pEVThEZUpveVE1em4Kam5xeWFKK3M4dytIcXorbmpnZndxL2R4M2J5NWllczk2Yjk3QkNhNlJNRHN2ZzhrdE1FS3B3cEQrZERid2pZZQp5MUNGQlM2YnpsRFMvYTFoa2E5amlBaGRUYUx5V0xXVEFtT0Mzb3VTSXorWkl3VkQ0aTN4dGZZV1lId0NXdFNICndLYitGTzNndXVSTVFWSkVXNk9LT01CaFZ5OFJmSkpMVi9DWUMxeGI4eFZFVGJxT0RGYmFqT1EwT0JENGR3UEUKMGlqZFFXLzBHTW0wTTZaTnM3cFo3R1lBNWowYVY4ellTOHZYU1FJREFRQUJBb0lCQVFDaUtlTG5wTXRib3oxTgpXR0xZTGNodXFVTjNIQmsrY1VMM3dGQjJPQ2k5RVBUY3Q5d2NwT3JFZFNmcFhhWXh6NC94TGpuc3JuSXMra0hRCllHVjQrNVcxVlc1RU0vTC9waVJ1WkhMazM5bmlTYzM5L3kyZENvaXYySHVHd3JzVE0vZUE2QWlpQUZMZjBGWEQKZE8wOWpDakVyOUtzTy91UlZjZ1YrZWpyeWpWcXNyL0QxRWg5REM4RUUwTGJYZzVoU3E0VHg5blBEZ3g0bVkwbApjdmlMSFIwSVM3VzR2Z0lEZjJzaXNvMmdCMS93d1d2b3lSSzdMRTVXNDlteTdZK0xlUmxoaE5IMGxseGVZNEpCCmJwVVVHd1YxaHBUM0UwamJYQ0tGa2dpK0lUc2I2dGJudE1PQXlxMEZVYVRRNjFOTDdDZFVSVDlZdWR6R0I4WkUKNUhKTFRwN0JBb0dCQVBqVk80V1FOVVYraHF4bEY2S0dKSE9ubTNRQm81VUtYL0FlMnFOUnh0REUydEsvOHllMQp5d1JXcVJDaUkvcnJ2dXVRMFNtVDdLRGpuSnFRTjBic0JGMkV6S3BZMHIvTkFPMm9Ib0JCWkgvYldDZmNtMWg4CnF4WlU1RGt0eTltSThpYzIxSEVZcUhqVjdhaUVCdG9GUktucXpFQ0JiaC8zRklYSGFFRHlNbStkQW9HQkFOZ1EKLzNsRnI2ejFaTWRmTHBPNXdxOVFONXBXdlZzTzdDRHRxdktkRG1EWTlBQVpVWndEMEROYVBLZ3BkN3hFYmZIRQpZZmkyWUFaZHJ0Y2V3c2dpdTM0L3BmenlNd2k4djkrSHR3RE14SldRZFhneE9mVDRUL2dWRXlya053RThzdDNkClpZV1k3bmJxVDh2MmRTcTQ5UTlBOXVkWVdHOWtuNFg5dGo3ci83U2RBb0dBSW1raWhSTHZPd0FIVWJuZExkMk4KRnUxYnd3d2krZzVvUEFXWVNMT2JZZTJITVZQWUpXcXZlNWNjWkM5MytGQTNvODN3RHViazkwN2lya0U1VTdaNQoyQkR3V0xKVjJxNVg3WVd0U2lGQTY2bUNwR2lPbHdzT2dkVVZobzY5dlFTQ01FZ1YwdG9OR2tERFQrV0tLUVpICmU1UDcwUVBWSGRpR1h3VzNkaHZJTzhVQ2dZRUF0Wk1iVHF2TVpYcFh0ZUI4UVBMejgrWml3OVl2RFMzdUxBSHYKRGpJRVdra1lURmo2cHpUaEs3YWlrT05BVnp2ZWRUV0c2NzgvMVRtM2E5clM3K09ZVXhGa0NiejBQRng2bG52egp3NzFSV3l0cVBKYUowUjgzL1JDZzZnT2RZZkhEa3dXeWdtSXh6RWMreGZZWklzMEtURVpZOTdQYnBja1c4a0J6CmZrOVB0VlVDZ1lBWkYzcW9OWVRPVmRCUlRZNEJJRU1qSkVmUnF0b29DZC9zVGZvUDU2cUJWTVcxZXp3RkxQMVUKQUVPcXRQTlk2MWo0Qmo2UzYxd3c5emNLN0FHVHVnbXNmSng1cGMxWlFpcjh3MEJ5UE9JQXovMmNaRC8yaVBlegpkUGdta2UzQVRzeEkra0dwbHRhZS9LYitSTlhrQmRCU2dZU2RQdlB4eElLd3NvcytYOEpnZ1E9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
+type: kubernetes.io/tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: example-conjur-oss
+  labels:
+    app: conjur-oss
+    app.kubernetes.io/component: service
+    app.kubernetes.io/name: example-conjur-oss
+spec:
+  ports:
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 9443
+  selector:
+    app: conjur-oss
+    app.kubernetes.io/component: service
+    app.kubernetes.io/name: example-conjur-oss
+  type: ClusterIP
+  sessionAffinity: None
