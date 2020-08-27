@@ -118,3 +118,8 @@ bundle: manifests
 .PHONY: bundle-build
 bundle-build:
 	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+
+# Clean the cluster of Conjur resources
+.PHONY: cluster-clean
+cluster-clean:
+	kubectl delete clusterrolebinding,clusterrole,configmap,deployment,persistentvolumeclaim,route,secret,service,serviceaccount,statefulset -l app=conjur-oss
