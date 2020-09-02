@@ -83,5 +83,9 @@ func (r *ConjurReconciler) reconcileConjur(cr *v1a1.Conjur) error {
 	if err := r.reconcileDatabase(cr); err != nil {
 		return err
 	}
+
+	if err := r.reconcileServer(cr); err != nil {
+		return err
+	}
 	return nil
 }
