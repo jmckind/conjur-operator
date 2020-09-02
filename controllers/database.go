@@ -182,11 +182,11 @@ func (r *ConjurReconciler) reconcileDatabaseStatefulSet(cr *v1a1.Conjur) error {
 		{
 			Args: []string{
 				"/usr/bin/run-postgresql",
-				"'-c'",
+				"-c",
 				"ssl=on",
-				"'-c'",
+				"-c",
 				"ssl_cert_file=/etc/certs/tls.crt",
-				"'-c'",
+				"-c",
 				"ssl_key_file=/etc/certs/tls.key",
 			},
 			Env: []corev1.EnvVar{
@@ -197,6 +197,7 @@ func (r *ConjurReconciler) reconcileDatabaseStatefulSet(cr *v1a1.Conjur) error {
 							LocalObjectReference: corev1.LocalObjectReference{
 								Name: nameWithSuffix(cr.Name, "conjur-database-password"),
 							},
+							Key: "key",
 						},
 					},
 				},
@@ -248,7 +249,7 @@ func (r *ConjurReconciler) reconcileDatabaseTLS(cr *v1a1.Conjur) error {
 		return nil // Database TLS Secret found, do nothing
 	}
 
-	caSecret := newSecret(cr.Namespace, "conjur-ca")
+	caSecret := newSecret(cr.Namespace, nameWithSuffix(cr.Name, "conjur-ca"))
 	if !r.isResourceFound(cr.Namespace, caSecret.Name, caSecret) {
 		r.Log.Info("ca secret not found, waiting to create database tls secret")
 		return nil
@@ -319,5 +320,6 @@ func (r *ConjurReconciler) reconcileDataKey(cr *v1a1.Conjur) error {
 		"key": []byte(base64.StdEncoding.EncodeToString(key)),
 	}
 
+	ctrl.SetControllerReference(cr, secret, r.Scheme)
 	return r.Create(context.TODO(), secret)
 }
