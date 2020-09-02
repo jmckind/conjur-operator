@@ -1,0 +1,87 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.3.0
+  creationTimestamp: null
+  name: conjurs.oss.cyberark.com
+spec:
+  group: oss.cyberark.com
+  names:
+    kind: Conjur
+    listKind: ConjurList
+    plural: conjurs
+    singular: conjur
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: Conjur is the Schema for the conjurs API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: ConjurSpec defines the desired state of Conjur
+          properties:
+            account:
+              description: Account is the name of the Conjur account to be used.
+              type: string
+            database:
+              description: Database is the desired state for the Conjur database.
+              properties:
+                count:
+                  description: Count is the replica count for the Conjur database
+                    StatefulSet.
+                  format: int32
+                  type: integer
+                url:
+                  description: URL is the PostgreSQL connection string to be used.
+                    If not provided, an integrated PostgreSQL deployment will be created.
+                  type: string
+              type: object
+            server:
+              description: Server is the desired state for the Conjur sever.
+              properties:
+                count:
+                  description: Count is the replica count for the Conjur server Deployment.
+                  format: int32
+                  type: integer
+              type: object
+          type: object
+        status:
+          description: ConjurStatus defines the observed state of Conjur
+          properties:
+            phase:
+              description: 'Phase is a simple, high-level summary of where Conjur
+                is in its lifecycle. There are five possible phase values: Pending:
+                The Conjur resource has been accepted by the Kubernetes system. Available:
+                All of the resources for Conjur are ready. Failed: At least one resource
+                has experienced a failure. Unknown: For some reason the state of the
+                Conjur phase could not be obtained.'
+              type: string
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

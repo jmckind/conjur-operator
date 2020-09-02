@@ -11,3 +11,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+package common
+
+const (
+	// ConjurKeyApp is the application key that is used in labels and
+	// annotations.
+	ConjurKeyApp = "app"
+
+	// ConjurKeyAppName is the application name key that is used in labels and
+	// annotations.
+	ConjurKeyAppName = "app.kubernetes.io/name"
+
+	// ConjurKeyAppComponent is the application component key that is used in
+	// labels and annotations.
+	ConjurKeyAppComponent = "app.kubernetes.io/component"
+)

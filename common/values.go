@@ -11,3 +11,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+package common
+
+import (
+	"time"
+)
+
+const (
+	// ConjurAppName is the application name that is used in labels and annotations.
+	ConjurAppName = "conjur-oss"
+
+	// ConjurComponentPostgres is the value to use for the postgres component.
+	ConjurComponentPostgres = "postgres"
+
+	// ConjurDuration365Days is a duration representing 365 days.
+	ConjurDuration365Days = time.Hour * 24 * 365
+)
