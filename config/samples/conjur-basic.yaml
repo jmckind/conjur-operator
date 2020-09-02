@@ -1,7 +1,7 @@
 apiVersion: oss.cyberark.com/v1alpha1
 kind: Conjur
 metadata:
-  name: conjur-sample
-spec:
-  # Add fields here
-  foo: bar
+  name: example
+  labels:
+    example: basic
+spec: {}
