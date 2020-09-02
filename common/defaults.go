@@ -36,7 +36,7 @@ const (
 	ConjurDefaultDatabaseVersion = "sha256:419a6454b74ff3b6fe5653757e107da3a26aee6cb34d625bbb7dac3637c12801"
 
 	// ConjurDefaultPVCCapicity is the default PVC capacity.
-	ConjurDefaultPVCCapicity = "8Gi"
+	ConjurDefaultPVCCapicity = "2Gi"
 
 	// ConjurDefaultRSAKeySize is the default RSA key size when not specified.
 	ConjurDefaultRSAKeySize = 2048
