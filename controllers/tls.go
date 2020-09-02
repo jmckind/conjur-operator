@@ -53,9 +53,18 @@ func (r *ConjurReconciler) reconcileCASecret(cr *v1a1.Conjur) error {
 	return r.Client.Create(context.TODO(), secret)
 }
 
+// reconcileTLS will ensure that the TLS resources are present and owned by
+// the given Conjur resource.
+func (r *ConjurReconciler) reconcileTLS(cr *v1a1.Conjur) error {
+	if err := r.reconcileCASecret(cr); err != nil {
+		return err
+	}
+	return nil
+}
+
 // newCertificateSecret creates a new secret using the given Conjur name, suffix and CA certificate/key.
 func newCertificateSecret(cr *v1a1.Conjur, suffix string, caCert *x509.Certificate, caKey *rsa.PrivateKey) (*corev1.Secret, error) {
-	secret := newSecret(cr.Namespace, suffix)
+	secret := newSecret(cr.Namespace, nameWithSuffix(cr.Name, suffix))
 
 	key, err := common.NewPrivateKey()
 	if err != nil {

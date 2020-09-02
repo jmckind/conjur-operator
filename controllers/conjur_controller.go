@@ -45,7 +45,7 @@ func (r *ConjurReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 
 	cr := &v1a1.Conjur{}
 	if err := r.Get(context.TODO(), req.NamespacedName, cr); err != nil {
-		return ctrl.Result{}, err
+		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
 	if err := r.reconcileConjur(cr); err != nil {
@@ -73,6 +73,10 @@ func (r *ConjurReconciler) SetupWithManager(mgr ctrl.Manager) error {
 // present for the given Conjur instance.
 func (r *ConjurReconciler) reconcileConjur(cr *v1a1.Conjur) error {
 	if err := r.reconcileStatus(cr); err != nil {
+		return err
+	}
+
+	if err := r.reconcileTLS(cr); err != nil {
 		return err
 	}
 
