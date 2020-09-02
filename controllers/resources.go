@@ -66,6 +66,13 @@ func nameWithSuffix(name string, suffix string) string {
 	return fmt.Sprintf("%s-%s", name, suffix)
 }
 
+// newConfigMap will return a new ConfigMap with the given namespace and name.
+func newConfigMap(namespace string, name string) *corev1.ConfigMap {
+	return &corev1.ConfigMap{
+		ObjectMeta: defaultMeta(namespace, name),
+	}
+}
+
 // newDeployment will return a new Deployment with the given namespace and name.
 func newDeployment(namespace string, name string) *appsv1.Deployment {
 	return &appsv1.Deployment{
