@@ -18,7 +18,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
+	goruntime "runtime"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -28,7 +30,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	ossv1alpha1 "github.com/jmckind/conjur-operator/api/v1alpha1"
+	"github.com/jmckind/conjur-operator/common"
 	"github.com/jmckind/conjur-operator/controllers"
+	routev1 "github.com/openshift/api/route/v1"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -54,6 +58,20 @@ func main() {
 	flag.Parse()
 
 	ctrl.SetLogger(zap.New(zap.UseDevMode(true)))
+	printVersion()
+
+	// Inspect cluster to verify availability of extra features
+	if err := common.InspectCluster(); err != nil {
+		setupLog.Info("unable to inspect cluster")
+	}
+
+	// Setup Scheme for OpenShift Routes if available.
+	if common.IsRouteAPIAvailable() {
+		if err := routev1.AddToScheme(scheme); err != nil {
+			setupLog.Error(err, "")
+			os.Exit(1)
+		}
+	}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:             scheme,
@@ -82,4 +100,11 @@ func main() {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
+}
+
+// printVersion will output the runtime environment and version information.
+func printVersion() {
+	setupLog.Info(fmt.Sprintf("go Version: %s", goruntime.Version()))
+	setupLog.Info(fmt.Sprintf("go os/arch: %s/%s", goruntime.GOOS, goruntime.GOARCH))
+	setupLog.Info(fmt.Sprintf("%s-operator version: %v", common.ConjurAppName, common.Version))
 }
