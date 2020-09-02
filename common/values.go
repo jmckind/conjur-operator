@@ -27,4 +27,7 @@ const (
 
 	// ConjurDuration365Days is a duration representing 365 days.
 	ConjurDuration365Days = time.Hour * 24 * 365
+
+	// Version is the operator version.
+	Version = "0.0.1"
 )
