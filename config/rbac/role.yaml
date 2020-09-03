@@ -48,6 +48,7 @@ rules:
   - oss.cyberark.com
   resources:
   - conjurs
+  - conjurs/finalizers
   verbs:
   - create
   - delete

@@ -158,7 +158,7 @@ func (r *ConjurReconciler) reconcileServerDeployment(cr *v1a1.Conjur) error {
 	}
 
 	deploy.Spec.Template.Labels = getServerLabels(cr)
-	deploy.Spec.Template.Spec.ServiceAccountName = nameWithSuffix(cr.Name, common.ConjurAppName)
+	deploy.Spec.Template.Spec.ServiceAccountName = fmt.Sprintf("conjur-operator-%s", common.ConjurAppName)
 
 	deploy.Spec.Template.Spec.Containers = []corev1.Container{
 		{
