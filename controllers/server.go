@@ -16,6 +16,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 
 	v1a1 "github.com/jmckind/conjur-operator/api/v1alpha1"
@@ -219,7 +220,7 @@ func (r *ConjurReconciler) reconcileServerDeployment(cr *v1a1.Conjur) error {
 			Args: []string{
 				"server",
 				"--port",
-				string(common.ConjurDefaultServerPort),
+				fmt.Sprint(common.ConjurDefaultServerPort),
 			},
 			Env: []corev1.EnvVar{
 				{
@@ -316,11 +317,11 @@ func (r *ConjurReconciler) reconcileServerDeployment(cr *v1a1.Conjur) error {
 				},
 			},
 		}, {
-			Name: "example-conjur-ssl-ca-cert",
+			Name: "conjur-configmap-volume",
 			VolumeSource: corev1.VolumeSource{
 				ConfigMap: &corev1.ConfigMapVolumeSource{
 					LocalObjectReference: corev1.LocalObjectReference{
-						Name: nameWithSuffix(cr.Name, "conjur-ssl-ca-cert"),
+						Name: nameWithSuffix(cr.Name, "conjur-nginx-configmap"),
 					},
 					Items: []corev1.KeyToPath{
 						{
