@@ -15,6 +15,9 @@
 package common
 
 const (
+	// ConjurDefaultAuthenticators is the default authenticators to use for Conjur.
+	ConjurDefaultAuthenticators = "authn"
+
 	// ConjurDefaultTLSFileMode is the default file mode to use when mounting
 	// TLS secrets.
 	ConjurDefaultTLSFileMode = int32(384)
@@ -35,9 +38,32 @@ const (
 	// for the Conjur database.
 	ConjurDefaultDatabaseVersion = "sha256:419a6454b74ff3b6fe5653757e107da3a26aee6cb34d625bbb7dac3637c12801"
 
+	// ConjurDefaultProxySecurePort is the default secure port to use for the
+	// Conjur server proxy.
+	ConjurDefaultProxySecurePort = 9443
+
+	// ConjurDefaultProxyUnsecurePort is the default unsecure port to use for
+	// the Conjur server proxy.
+	ConjurDefaultProxyUnsecurePort = 9000
+
 	// ConjurDefaultPVCCapicity is the default PVC capacity.
 	ConjurDefaultPVCCapicity = "2Gi"
 
 	// ConjurDefaultRSAKeySize is the default RSA key size when not specified.
 	ConjurDefaultRSAKeySize = 2048
+
+	// ConjurDefaultServerCount is the default replica count for the Conjur
+	// server Deployment.
+	ConjurDefaultServerCount = int32(1)
+
+	// ConjurDefaultServerPort is the default port to use for the Conjur server
+	ConjurDefaultServerPort = 8000
+
+	// ConjurDefaultServerImage is the default container image to use for the
+	// Conjur server.
+	ConjurDefaultServerImage = "guygiat/conjur-oss-ocp"
+
+	// ConjurDefaultServerVersion is the default container image tag to use
+	// for the Conjur server.
+	ConjurDefaultServerVersion = "sha256:f2a4fa1dd75512223f1f58f12a8795756b19bf475ba8930915f4b46595e366ef"
 )
