@@ -35,8 +35,12 @@ type ConjurReconciler struct {
 	Scheme *runtime.Scheme
 }
 
+// +kubebuilder:rbac:namespace=conjur,groups=apps,resources=deployments/finalizers,verbs=update
+// +kubebuilder:rbac:namespace=conjur,groups=apps,resources=deployments;statefulsets,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:namespace=conjur,groups=core,resources=configmaps;events;persistentvolumeclaims;secrets;serviceaccounts;services;services/finalizers,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:namespace=conjur,groups=oss.cyberark.com,resources=conjurs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:namespace=conjur,groups=oss.cyberark.com,resources=conjurs/status,verbs=get;update;patch
+// +kubebuilder:rbac:namespace=conjur,groups=route.openshift.io,resources=routes;routes/custom-host,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile the actual vs desired state for a given Conjur custom resource.
 func (r *ConjurReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
