@@ -28,7 +28,7 @@ import (
 
 // reconcileCASecret ensures the CA Secret is created for the given Conjur resource.
 func (r *ConjurReconciler) reconcileCASecret(cr *v1a1.Conjur) error {
-	secret := newSecret(cr.Namespace, nameWithSuffix(cr.Name, "conjur-ca"))
+	secret := newSecret(cr.Namespace, nameWithSuffix(cr.Name, "conjur-ssl-ca-cert"))
 	if r.isResourceFound(cr.Namespace, secret.Name, secret) {
 		return nil // Secret found, do nothing
 	}

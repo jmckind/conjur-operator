@@ -249,7 +249,7 @@ func (r *ConjurReconciler) reconcileDatabaseTLS(cr *v1a1.Conjur) error {
 		return nil // Database TLS Secret found, do nothing
 	}
 
-	caSecret := newSecret(cr.Namespace, nameWithSuffix(cr.Name, "conjur-ca"))
+	caSecret := newSecret(cr.Namespace, nameWithSuffix(cr.Name, "conjur-ssl-ca-cert"))
 	if !r.isResourceFound(cr.Namespace, caSecret.Name, caSecret) {
 		r.Log.Info("ca secret not found, waiting to create database tls secret")
 		return nil
