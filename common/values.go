@@ -19,14 +19,25 @@ import (
 )
 
 const (
-	// ConjurAppName is the application name that is used in labels and annotations.
+	// ConjurAppName is the application name that is used in labels and
+	// annotations.
 	ConjurAppName = "conjur-oss"
+
+	// ConjurComponentProxy is the value to use for the Conjur server proxy
+	// component.
+	ConjurComponentProxy = "proxy"
 
 	// ConjurComponentPostgres is the value to use for the postgres component.
 	ConjurComponentPostgres = "postgres"
 
 	// ConjurDuration365Days is a duration representing 365 days.
 	ConjurDuration365Days = time.Hour * 24 * 365
+
+	// ConjurValueHTTP is the value to use for HTTP in labels and names.
+	ConjurValueHTTP = "http"
+
+	// ConjurValueHTTPS is the value to use for HTTPS in labels and names.
+	ConjurValueHTTPS = "https"
 
 	// Version is the operator version.
 	Version = "0.0.1"

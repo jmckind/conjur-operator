@@ -21,9 +21,17 @@ import (
 	v1a1 "github.com/jmckind/conjur-operator/api/v1alpha1"
 	"github.com/jmckind/conjur-operator/common"
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
+
+// getProxyImage will return the container image for the Conjur server proxy.
+func getProxyImage(cr *v1a1.Conjur) string {
+	img := common.ConjurDefaultProxyImage
+	tag := common.ConjurDefaultProxyVersion
+	return common.CombineImageTag(img, tag)
+}
 
 // getServerCount will return the replica count for the Conjur server
 // Deployment.
@@ -63,6 +71,10 @@ func (r *ConjurReconciler) reconcileServer(cr *v1a1.Conjur) error {
 	}
 
 	if err := r.reconcileNginxConfig(cr); err != nil {
+		return err
+	}
+
+	if err := r.reconcileServerDeployment(cr); err != nil {
 		return err
 	}
 
@@ -132,12 +144,204 @@ func (r *ConjurReconciler) reconcileNginxConfig(cr *v1a1.Conjur) error {
 // reconcileServerDeployment will ensure that the Conjur server Deployment is
 // present and owned by the given Conjur resource.
 func (r *ConjurReconciler) reconcileServerDeployment(cr *v1a1.Conjur) error {
-	deploy := newDeployment(cr.Namespace, nameWithSuffix(cr.Name, "conjur-oss"))
+	deploy := newDeployment(cr.Namespace, nameWithSuffix(cr.Name, common.ConjurAppName))
 	if r.isResourceFound(cr.Namespace, deploy.Name, deploy) {
 		return nil
 	}
 
 	deploy.Labels = getServerLabels(cr)
+	deploy.Spec.Replicas = getServerCount(cr)
+
+	deploy.Spec.Selector = &metav1.LabelSelector{
+		MatchLabels: getServerLabels(cr),
+	}
+
+	deploy.Spec.Template.Labels = getServerLabels(cr)
+	deploy.Spec.Template.Spec.ServiceAccountName = nameWithSuffix(cr.Name, common.ConjurAppName)
+
+	deploy.Spec.Template.Spec.Containers = []corev1.Container{
+		{
+			Image: getProxyImage(cr),
+			LivenessProbe: &corev1.Probe{
+				Handler: corev1.Handler{
+					HTTPGet: &corev1.HTTPGetAction{
+						Path:   common.ConjurDefaultProxyProbePath,
+						Port:   intstr.FromString(common.ConjurValueHTTPS),
+						Scheme: corev1.URISchemeHTTPS,
+					},
+				},
+				InitialDelaySeconds: 1,
+				TimeoutSeconds:      3,
+				PeriodSeconds:       5,
+				FailureThreshold:    180,
+			},
+			Name: common.ConjurComponentProxy,
+			Ports: []corev1.ContainerPort{
+				{
+					Name:          common.ConjurValueHTTPS,
+					ContainerPort: common.ConjurDefaultProxySecurePort,
+					Protocol:      corev1.ProtocolTCP,
+				}, {
+					Name:          common.ConjurValueHTTP,
+					ContainerPort: common.ConjurDefaultProxyUnsecurePort,
+					Protocol:      corev1.ProtocolTCP,
+				},
+			},
+			ReadinessProbe: &corev1.Probe{
+				Handler: corev1.Handler{
+					HTTPGet: &corev1.HTTPGetAction{
+						Path:   common.ConjurDefaultProxyProbePath,
+						Port:   intstr.FromString(common.ConjurValueHTTPS),
+						Scheme: corev1.URISchemeHTTPS,
+					},
+				},
+				InitialDelaySeconds: 1,
+				TimeoutSeconds:      3,
+				PeriodSeconds:       5,
+				FailureThreshold:    180,
+			},
+			VolumeMounts: []corev1.VolumeMount{
+				{
+					Name:      "conjur-ssl-cert-volume",
+					MountPath: "/opt/conjur/etc/ssl/cert",
+					ReadOnly:  true,
+				}, {
+					Name:      "conjur-ssl-ca-cert-volume",
+					MountPath: "/opt/conjur/etc/ssl/ca",
+					ReadOnly:  true,
+				}, {
+					Name:      "conjur-configmap-volume",
+					MountPath: "/etc/nginx",
+					ReadOnly:  true,
+				},
+			},
+		}, {
+			Args: []string{
+				"server",
+				"--port",
+				string(common.ConjurDefaultServerPort),
+			},
+			Env: []corev1.EnvVar{
+				{
+					Name: "CONJUR_AUTHENTICATORS",
+					ValueFrom: &corev1.EnvVarSource{
+						SecretKeyRef: &corev1.SecretKeySelector{
+							LocalObjectReference: corev1.LocalObjectReference{
+								Name: nameWithSuffix(cr.Name, "conjur-authenticators"),
+							},
+							Key: "key",
+						},
+					},
+				}, {
+					Name: "CONJUR_DATA_KEY",
+					ValueFrom: &corev1.EnvVarSource{
+						SecretKeyRef: &corev1.SecretKeySelector{
+							LocalObjectReference: corev1.LocalObjectReference{
+								Name: nameWithSuffix(cr.Name, "conjur-data-key"),
+							},
+							Key: "key",
+						},
+					},
+				}, {
+					Name: "DATABASE_URL",
+					ValueFrom: &corev1.EnvVarSource{
+						SecretKeyRef: &corev1.SecretKeySelector{
+							LocalObjectReference: corev1.LocalObjectReference{
+								Name: nameWithSuffix(cr.Name, "conjur-database-url"),
+							},
+							Key: "key",
+						},
+					},
+				}, {
+					Name:  "CONJUR_ACCOUNT",
+					Value: "default",
+				},
+			},
+			Image: getServerImage(cr),
+			LivenessProbe: &corev1.Probe{
+				Handler: corev1.Handler{
+					HTTPGet: &corev1.HTTPGetAction{
+						Path:   common.ConjurDefaultServerProbePath,
+						Port:   intstr.FromString(common.ConjurValueHTTP),
+						Scheme: corev1.URISchemeHTTP,
+					},
+				},
+				InitialDelaySeconds: 1,
+				TimeoutSeconds:      2,
+				PeriodSeconds:       5,
+				FailureThreshold:    180,
+			},
+			Name: common.ConjurAppName,
+			Ports: []corev1.ContainerPort{
+				{
+					Name:          common.ConjurValueHTTP,
+					ContainerPort: common.ConjurDefaultServerPort,
+					Protocol:      corev1.ProtocolTCP,
+				},
+			},
+			ReadinessProbe: &corev1.Probe{
+				Handler: corev1.Handler{
+					HTTPGet: &corev1.HTTPGetAction{
+						Path:   common.ConjurDefaultServerProbePath,
+						Port:   intstr.FromString(common.ConjurValueHTTP),
+						Scheme: corev1.URISchemeHTTP,
+					},
+				},
+				InitialDelaySeconds: 1,
+				TimeoutSeconds:      30,
+				PeriodSeconds:       30,
+				FailureThreshold:    180,
+			},
+		},
+	}
+
+	mode256 := int32(256)
+	mode420 := int32(420)
+
+	deploy.Spec.Template.Spec.Volumes = []corev1.Volume{
+		{
+			Name: "conjur-ssl-cert-volume",
+			VolumeSource: corev1.VolumeSource{
+				Secret: &corev1.SecretVolumeSource{
+					SecretName:  nameWithSuffix(cr.Name, "conjur-ssl-cert"),
+					DefaultMode: &mode256,
+				},
+			},
+		}, {
+			Name: "conjur-ssl-ca-cert-volume",
+			VolumeSource: corev1.VolumeSource{
+				Secret: &corev1.SecretVolumeSource{
+					SecretName:  nameWithSuffix(cr.Name, "conjur-ssl-ca-cert"),
+					DefaultMode: &mode256,
+				},
+			},
+		}, {
+			Name: "example-conjur-ssl-ca-cert",
+			VolumeSource: corev1.VolumeSource{
+				ConfigMap: &corev1.ConfigMapVolumeSource{
+					LocalObjectReference: corev1.LocalObjectReference{
+						Name: nameWithSuffix(cr.Name, "conjur-ssl-ca-cert"),
+					},
+					Items: []corev1.KeyToPath{
+						{
+							Key:  "nginx_conf",
+							Path: "nginx.conf",
+						}, {
+							Key:  "mime_types",
+							Path: "mime.types",
+						}, {
+							Key:  "dhparams",
+							Path: "dhparams.pem",
+						}, {
+							Key:  "conjur_site",
+							Path: "sites-enabled/conjur.conf",
+						},
+					},
+					DefaultMode: &mode420,
+				},
+			},
+		},
+	}
 
 	ctrl.SetControllerReference(cr, deploy, r.Scheme)
 	return r.Create(context.TODO(), deploy)
