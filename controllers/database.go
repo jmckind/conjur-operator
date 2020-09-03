@@ -18,6 +18,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 
 	v1a1 "github.com/jmckind/conjur-operator/api/v1alpha1"
@@ -100,7 +101,7 @@ func (r *ConjurReconciler) reconcileDatabasePassword(cr *v1a1.Conjur) error {
 		return nil // Database URL is provided, no need to generate database root password
 	}
 
-	key := make([]byte, 64)
+	key := make([]byte, 32)
 	_, err := rand.Read(key)
 	if err != nil {
 		return err
@@ -108,7 +109,7 @@ func (r *ConjurReconciler) reconcileDatabasePassword(cr *v1a1.Conjur) error {
 
 	secret.Labels = getDatabaseLabels(cr)
 	secret.Data = map[string][]byte{
-		"key": []byte(base64.StdEncoding.EncodeToString(key)),
+		"key": []byte(hex.EncodeToString(key)),
 	}
 
 	ctrl.SetControllerReference(cr, secret, r.Scheme)
@@ -290,7 +291,11 @@ func (r *ConjurReconciler) reconcileDatabaseURL(cr *v1a1.Conjur) error {
 			r.Log.Info("database password secret not found, waiting to create database url secret")
 			return nil
 		}
-		dbURL = fmt.Sprintf("postgres://postgres:%s@%s-postgres/postgres?sslmode=require", dbPwdSecret.Data["key"], cr.Name)
+		dbURL = fmt.Sprintf(
+			"postgres://postgres:%s@%s/postgres?sslmode=require",
+			dbPwdSecret.Data["key"],
+			nameWithSuffix(cr.Name, "conjur-postgres"),
+		)
 	}
 
 	secret.Labels = getDatabaseLabels(cr)
