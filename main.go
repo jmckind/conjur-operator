@@ -21,12 +21,14 @@ import (
 	"fmt"
 	"os"
 	goruntime "runtime"
+	"strings"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	ossv1alpha1 "github.com/jmckind/conjur-operator/api/v1alpha1"
@@ -45,6 +47,20 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(ossv1alpha1.AddToScheme(scheme))
+
+	// Inspect cluster to verify availability of extra features
+	if err := common.InspectCluster(); err != nil {
+		setupLog.Info("unable to inspect cluster")
+	}
+
+	// Setup Scheme for OpenShift Routes if available.
+	if common.IsRouteAPIAvailable() {
+		if err := routev1.AddToScheme(scheme); err != nil {
+			setupLog.Error(err, "")
+			os.Exit(1)
+		}
+	}
+
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -60,26 +76,27 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseDevMode(true)))
 	printVersion()
 
-	// Inspect cluster to verify availability of extra features
-	if err := common.InspectCluster(); err != nil {
-		setupLog.Info("unable to inspect cluster")
-	}
-
-	// Setup Scheme for OpenShift Routes if available.
-	if common.IsRouteAPIAvailable() {
-		if err := routev1.AddToScheme(scheme); err != nil {
-			setupLog.Error(err, "")
-			os.Exit(1)
-		}
-	}
-
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
+	// Set default manager options
+	namespace := os.Getenv("WATCH_NAMESPACE")
+	options := ctrl.Options{
 		Scheme:             scheme,
 		MetricsBindAddress: metricsAddr,
+		Namespace:          namespace,
 		Port:               9443,
 		LeaderElection:     enableLeaderElection,
 		LeaderElectionID:   "42f7f87d.cyberark.com",
-	})
+	}
+
+	// Add support for MultiNamespace set in WATCH_NAMESPACE (e.g ns1,ns2)
+	// Note that this is not intended to be used for excluding namespaces, this is better done via a Predicate
+	// Also note that you may face performance issues when using this with a high number of namespaces.
+	// More Info: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/cache#MultiNamespacedCacheBuilder
+	if strings.Contains(namespace, ",") {
+		options.Namespace = ""
+		options.NewCache = cache.MultiNamespacedCacheBuilder(strings.Split(namespace, ","))
+	}
+
+	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), options)
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
