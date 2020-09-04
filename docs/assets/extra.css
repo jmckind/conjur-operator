@@ -1,10 +1,13 @@
 [data-md-color-scheme="conjur"] {
     --md-primary-fg-color:        #123;
-    --md-primary-fg-color--light: #123;
+    --md-primary-fg-color--light: #133653;
     --md-primary-fg-color--dark:  #123;
 
     --md-accent-fg-color: #2f73b0;
     --md-accent-fg-color--transparent:   hsla(#2f73b0, 0.1);
+
+    --md-footer-bg-color: #133653;
+    --md-footer-bg-color--dark: #123;
 }
 
 .codehilite {
