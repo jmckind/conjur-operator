@@ -2,7 +2,7 @@ site_name: Conjur OSS Operator
 repo_url: https://github.com/jmckind/conjur-operator
 strict: true
 theme:
-  name: bootstrap4
+  name: gitbook
   # palette:
   #   primary: teal
   # font:
