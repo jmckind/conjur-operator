@@ -25,7 +25,6 @@ nav:
   - Reference:
     - Conjur: reference/conjur.md
   - Contributing: 
-      - Development: 
-          - Setup: contribute/development.md
+      - Development: contribute/development.md
   - Releases ⧉: https://github.com/jmckind/conjur-operator/releases
   - Roadmap ⧉: https://github.com/jmckind/conjur-operator/milestones
