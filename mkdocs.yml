@@ -4,9 +4,10 @@ strict: true
 theme:
   name: material
   palette:
-    primary: blue
+    scheme: conjur
   # font:
   #   text: 'Work Sans'
+  favicon: 'assets/favicon.ico'
   logo: 'assets/conjur-logo.png'
 extra_css:
   - 'assets/extra.css'
