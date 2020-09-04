@@ -1,0 +1,31 @@
+site_name: Conjur OSS Operator
+repo_url: https://github.com/jmckind/conjur-operator
+strict: true
+theme:
+  name: bootstrap4
+  # palette:
+  #   primary: teal
+  # font:
+  #   text: 'Work Sans'
+  # logo: 'assets/logo.png'
+# extra_css:
+#   - 'assets/extra.css'
+markdown_extensions:
+- codehilite
+- admonition
+- toc:
+    permalink: true
+nav:
+  - Overview: index.md
+  - Install:
+    - Manual Installation: install/manual.md
+  - Usage:
+    - Basics: usage/basics.md
+    - Routes: usage/routes.md
+  - Reference:
+    - Conjur: reference/conjur.md
+  - Contributing: 
+      - Development: 
+          - Setup: contribute/development.md
+  - Releases ⧉: https://github.com/jmckind/conjur-operator/releases
+  - Roadmap ⧉: https://github.com/jmckind/conjur-operator/milestones

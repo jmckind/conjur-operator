@@ -1,25 +1,16 @@
 # Conjur OSS Operator
 
+[![Documentation Status](https://readthedocs.org/projects/conjur-operator/badge/?version=latest)](https://conjur-operator.readthedocs.io/en/latest/?badge=latest)
+
 A Kubernetes Operator for managing Conjur OSS.
 
-## Install
+## Documentation
 
-Start by cloning this repository and navigate to the root directory. Run the `deploy` target in the provided Makefile to deploy the operator. 
-
-```
-make deploy
-```
-
-## Usage
-
-Once the operator is deployed, create a `Conjur` custom resource.
-
-```
-kubectl apply -f config/samples/conjur-basic.yaml
-```
+See the [documentation][docs] for installation and usage of the operator.
 
 ## License
 
 The Conjur OSS Operator is released under the Apache 2.0 license. See the [LICENSE][license_file] file for details.
 
+[docs]:https://conjur-operator.readthedocs.io
 [license_file]:./LICENSE
