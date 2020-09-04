@@ -1,4 +1,4 @@
-# Conjur
+# Conjur Resource
 
 The `Conjur` resource is a Kubernetes Custom Resource (CRD) that describes the desired state for a given Conjur
 OSS environment and allows for the configuration of the components that make up a Conjur OSS cluster.

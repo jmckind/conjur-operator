@@ -1,4 +1,4 @@
-# Usage Basics
+# Basic Usage
 
 See the [Conjur Reference][conjur_reference] for the full list of properties and defaults to configure the Conjur environment.
 
