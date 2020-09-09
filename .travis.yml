@@ -11,7 +11,9 @@ cache:
   directories:
   - $GOCACHE
   - $GOPATH/pkg/mod
-script: bash make all
+before_install:
+  - sudo apt-get -y install make
+script: make all
 branches:
   only: # safelist
   - master
