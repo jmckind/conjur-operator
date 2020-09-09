@@ -1,5 +1,6 @@
 # Conjur OSS Operator
 
+[![Build Status](https://travis-ci.org/jmckind/conjur-operator.svg?branch=master)](https://travis-ci.org/jmckind/conjur-operator)
 [![Documentation Status](https://readthedocs.org/projects/conjur-operator/badge/?version=latest)](https://conjur-operator.readthedocs.io/en/latest/?badge=latest)
 
 A Kubernetes Operator for managing Conjur OSS.
