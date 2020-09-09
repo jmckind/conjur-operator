@@ -1,0 +1,18 @@
+os: linux
+arch: amd64
+dist: bionic
+language: go
+go:
+- "1.14.x"
+env:
+  global:
+  - GO111MODULE=on
+cache:
+  directories:
+  - $GOCACHE
+  - $GOPATH/pkg/mod
+script: bash make all
+branches:
+  only: # safelist
+  - master
+  - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
