@@ -1,0 +1,9 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: conjur-oss-catalog
+spec:
+  sourceType: grpc
+  image: quay.io/jmckind/conjur-operator-index:latest
+  displayName: Conjur OSS Operator
+  publisher: Conjur Community
