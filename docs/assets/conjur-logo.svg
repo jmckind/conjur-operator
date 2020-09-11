@@ -7,13 +7,16 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-   height="45"
-   width="45"
-   sodipodi:docname="conjur-logo.svg"
-   id="svg54"
+   inkscape:export-ydpi="96"
+   inkscape:export-xdpi="96"
+   inkscape:export-filename="/home/john/src/jmckind/conjur-operator/docs/assets/conjur-logo.png"
+   viewBox="0 0 63.999997 63.999999"
    version="1.1"
-   viewBox="0 0 44.999998 44.999999">
+   id="svg54"
+   sodipodi:docname="conjur-logo.svg"
+   width="64"
+   height="64"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)">
   <metadata
      id="metadata58">
     <rdf:RDF>
@@ -27,25 +30,26 @@
     </rdf:RDF>
   </metadata>
   <sodipodi:namedview
-     inkscape:current-layer="Layer_1-2"
-     inkscape:window-maximized="0"
-     inkscape:window-y="32"
-     inkscape:window-x="0"
-     inkscape:cy="28.543"
-     inkscape:cx="130.31575"
-     inkscape:zoom="4.6310597"
-     showgrid="false"
-     id="namedview56"
-     inkscape:window-height="1235"
-     inkscape:window-width="3175"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0"
-     guidetolerance="10"
-     gridtolerance="10"
-     objecttolerance="10"
-     borderopacity="1"
+     inkscape:document-rotation="0"
+     pagecolor="#ffffff"
      bordercolor="#666666"
-     pagecolor="#ffffff" />
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2621"
+     inkscape:window-height="1834"
+     id="namedview56"
+     showgrid="false"
+     inkscape:zoom="4.6310597"
+     inkscape:cx="130.31575"
+     inkscape:cy="28.543"
+     inkscape:window-x="3988"
+     inkscape:window-y="154"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Layer_1-2" />
   <defs
      id="defs4">
     <style
@@ -54,46 +58,46 @@
   <title
      id="title6">Asset 28</title>
   <g
-     data-name="Layer 2"
-     id="Layer_2">
+     id="Layer_2"
+     data-name="Layer 2">
     <g
-       data-name="Layer 1"
-       id="Layer_1-2">
+       id="Layer_1-2"
+       data-name="Layer 1">
       <polygon
-         transform="translate(3.5681334,0.4318666)"
-         id="polygon8"
+         class="cls-1"
          points="19.12,11.35 19.12,0 0,11.05 9.85,16.72 "
-         class="cls-1" />
+         id="polygon8"
+         transform="matrix(1.4313486,0,0,1.4313486,5.2972868,0.4920443)" />
       <polygon
-         transform="translate(3.5681334,0.4318666)"
+         class="cls-2"
+         points="28.43,27.42 38.26,21.74 38.26,33.09 19.16,44.13 19.14,32.79 "
          id="polygon10"
-         points="38.26,21.74 38.26,33.09 19.16,44.13 19.14,32.79 28.43,27.42 "
-         class="cls-2" />
+         transform="matrix(1.4313486,0,0,1.4313486,5.2972868,0.4920443)" />
       <polygon
-         transform="translate(3.5681334,0.4318666)"
-         id="polygon12"
+         class="cls-2"
          points="28.41,16.71 38.23,11.03 19.12,0 19.12,11.35 "
-         class="cls-2" />
+         id="polygon12"
+         transform="matrix(1.4313486,0,0,1.4313486,5.2972868,0.4920443)" />
       <polygon
-         transform="translate(3.5681334,0.4318666)"
-         id="polygon14"
+         class="cls-1"
          points="9.85,27.43 0.03,33.12 19.16,44.13 19.14,32.78 "
-         class="cls-1" />
+         id="polygon14"
+         transform="matrix(1.4313486,0,0,1.4313486,5.2972868,0.4920443)" />
       <polygon
-         transform="translate(3.5681334,0.4318666)"
-         id="polygon16"
+         class="cls-2"
          points="9.85,16.72 0,11.05 0.03,33.12 9.85,27.43 "
-         class="cls-2" />
+         id="polygon16"
+         transform="matrix(1.4313486,0,0,1.4313486,5.2972868,0.4920443)" />
       <polygon
-         transform="translate(3.5681334,0.4318666)"
-         id="polygon18"
+         class="cls-3"
          points="28.41,16.71 28.41,27.43 19.12,22.07 19.12,11.34 "
-         class="cls-3" />
+         id="polygon18"
+         transform="matrix(1.4313486,0,0,1.4313486,5.2972868,0.4920443)" />
       <polyline
-         transform="translate(3.5681334,0.4318666)"
-         id="polyline20"
+         class="cls-4"
          points="19.12 11.34 9.85 16.72 9.85 27.43 19.12 22.07 19.12 11.35"
-         class="cls-4" />
+         id="polyline20"
+         transform="matrix(1.4313486,0,0,1.4313486,5.2972868,0.4920443)" />
     </g>
   </g>
 </svg>
