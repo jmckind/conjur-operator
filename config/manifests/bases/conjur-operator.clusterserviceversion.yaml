@@ -9,7 +9,7 @@ metadata:
     containerImage: https://quay.io/repository/jmckind/conjur-operator:latest
     createdAt: "2020-07-29 15:32:33"
     description: A seamless open source interface to securely authenticate, control and audit non-human access across tools, applications, containers and cloud environments via robust secrets management.
-    operators.operatorframework.io/builder: operator-sdk-v1.0.0
+    operators.operatorframework.io/builder: operator-sdk-v1.0.0+git
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
     repository: https://github.com/jmckind/conjur-operator
     support: Conjure Community
