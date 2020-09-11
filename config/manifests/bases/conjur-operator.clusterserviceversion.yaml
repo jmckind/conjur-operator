@@ -1,0 +1,113 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[{"apiVersion":"oss.cyberark.com/v1alpha1","kind":"Conjur","metadata":{"name":"example"},"spec":{"account":"default"}}]'
+    capabilities: Basic Install
+    categories: Security
+    certified: "false"
+    containerImage: https://quay.io/repository/jmckind/conjur-operator:latest
+    createdAt: "2020-07-29 15:32:33"
+    description: A seamless open source interface to securely authenticate, control and audit non-human access across tools, applications, containers and cloud environments via robust secrets management.
+    repository: https://github.com/jmckind/conjur-operator
+    operators.operatorframework.io/builder: operator-sdk-v1.0.0
+    operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
+    support: Conjure Community
+  name: conjur-operator.v0.0.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - kind: Conjur
+      name: conjurs.oss.cyberark.com
+      version: v1alpha1
+      displayName: Conjur 
+      description: Conjur is the representation of the desired state for a Conjur OSS environment.
+      resources:
+      - kind: ConfigMap
+        name: ''
+        version: v1
+      - kind: Deployment
+        name: ''
+        version: apps/v1
+      - kind: PersistentVolumeClaim
+        name: ''
+        version: v1
+      - kind: Pod
+        name: ''
+        version: v1
+      - kind: Secret
+        name: ''
+        version: v1
+      - kind: Service
+        name: ''
+        version: v1
+      - kind: StatefulSet
+        name: ''
+        version: apps/v1
+      specDescriptors:
+      - description: 'The name of the Conjur account to be used.'
+        displayName: Account
+        path: account
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:text'
+      statusDescriptors:
+      - description: 'Phase is a simple, high-level summary of where the Conjur is in its lifecycle.'
+        displayName: Phase
+        path: phase
+        x-descriptors:
+        - 'urn:alm:descriptor:com.tectonic.ui:text'
+  description: |
+    ## Overview
+
+    The Conjur OSS Operator manages the full lifecycle for [Conjur OSS](https://www.conjur.org/) and it's
+    components. The operator's goal is to automate the tasks required when operating a Conjur OSS environment.
+
+    ## Usage
+
+    Deploy a basic Conjur OSS environment by creating a new Conjur resource in the namespace where the operator is installed.
+
+    ```
+    apiVersion: oss.cyberark.com/v1alpha1
+    kind: Conjur
+    metadata:
+      name: example
+    spec:
+      account: default
+    ```
+
+    See the [documentation](https://conjur-operator.readthedocs.io) and examples on
+    [github](https://github.com/jmckind/conjur-operator) for more information.
+  displayName: Conjur OSS Operator
+  icon:
+  - base64data: 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
+    mediatype: image/png
+  install:
+    spec:
+      deployments: null
+    strategy: ""
+  installModes:
+  - type: OwnNamespace
+    supported: true
+  - type: SingleNamespace
+    supported: true
+  - type: MultiNamespace
+    supported: false
+  - type: AllNamespaces 
+    supported: false
+  keywords:
+  - security
+  links:
+  - name: Documentation
+    url: https://conjur-operator.readthedocs.io
+  - name: Source Code
+    url: https://github.com/jmckind/conjur-operato
+  maintainers:
+  - email: john.mckenzie@redhat.com
+    name: John McKenzie
+  maturity: alpha
+  provider:
+    name: Conjure Community
+    url: https://www.conjur.org
+  version: 0.0.1
