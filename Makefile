@@ -1,7 +1,7 @@
 # Current Operator version
 VERSION ?= 0.0.1
 # Default bundle image tag
-BUNDLE_IMG ?= controller-bundle:$(VERSION)
+BUNDLE_IMG ?= quay.io/jmckind/conjur-operator-bundle:$(VERSION)
 # Options for 'bundle-build'
 ifneq ($(origin CHANNELS), undefined)
 BUNDLE_CHANNELS := --channels=$(CHANNELS)
@@ -121,7 +121,7 @@ bundle: manifests
 # Build the bundle image.
 .PHONY: bundle-build
 bundle-build:
-	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+	podman build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
 
 # Clean the cluster of Conjur resources
 .PHONY: cluster-clean
