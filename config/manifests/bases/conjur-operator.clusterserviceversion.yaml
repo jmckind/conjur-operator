@@ -102,7 +102,7 @@ spec:
   - name: Documentation
     url: https://conjur-operator.readthedocs.io
   - name: Source Code
-    url: https://github.com/jmckind/conjur-operato
+    url: https://github.com/jmckind/conjur-operator
   maintainers:
   - email: john.mckenzie@redhat.com
     name: John McKenzie
