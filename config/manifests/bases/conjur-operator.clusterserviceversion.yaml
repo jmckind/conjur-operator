@@ -12,7 +12,7 @@ metadata:
     operators.operatorframework.io/builder: operator-sdk-v1.0.0+git
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
     repository: https://github.com/jmckind/conjur-operator
-    support: Conjure Community
+    support: Conjur Community
   name: conjur-operator.v0.0.1
   namespace: placeholder
 spec:
@@ -108,6 +108,6 @@ spec:
     name: John McKenzie
   maturity: alpha
   provider:
-    name: Conjure Community
+    name: Conjur Community
     url: https://www.conjur.org
   version: 0.0.1
