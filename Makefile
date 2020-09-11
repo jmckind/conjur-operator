@@ -23,6 +23,9 @@ else
 GOBIN=$(shell go env GOBIN)
 endif
 
+# Default index image tag
+INDEX_IMG ?= quay.io/jmckind/conjur-operator-index:latest
+
 all: manager
 
 # Run tests
@@ -134,3 +137,13 @@ bundle-image-push:
 .PHONY: cluster-clean
 cluster-clean:
 	kubectl delete clusterrolebinding,clusterrole,configmap,deployment,persistentvolumeclaim,route,secret,service,serviceaccount,statefulset -l app=conjur-oss
+
+# Add a bundle version to the operator index image
+.PHONY: index-add
+index-add:
+	opm index add --bundles $(BUNDLE_IMG) --tag $(INDEX_IMG)
+
+# Push the operator index image
+.PHONY: index-push
+index-push:
+	podman push $(INDEX_IMG)
