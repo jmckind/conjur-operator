@@ -9,9 +9,9 @@ metadata:
     containerImage: https://quay.io/repository/jmckind/conjur-operator:latest
     createdAt: "2020-07-29 15:32:33"
     description: A seamless open source interface to securely authenticate, control and audit non-human access across tools, applications, containers and cloud environments via robust secrets management.
-    repository: https://github.com/jmckind/conjur-operator
     operators.operatorframework.io/builder: operator-sdk-v1.0.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
+    repository: https://github.com/jmckind/conjur-operator
     support: Conjure Community
   name: conjur-operator.v0.0.1
   namespace: placeholder
@@ -19,45 +19,45 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - kind: Conjur
+    - description: Conjur is the representation of the desired state for a Conjur OSS environment.
+      displayName: Conjur
+      kind: Conjur
       name: conjurs.oss.cyberark.com
-      version: v1alpha1
-      displayName: Conjur 
-      description: Conjur is the representation of the desired state for a Conjur OSS environment.
       resources:
       - kind: ConfigMap
-        name: ''
+        name: ""
         version: v1
       - kind: Deployment
-        name: ''
+        name: ""
         version: apps/v1
       - kind: PersistentVolumeClaim
-        name: ''
+        name: ""
         version: v1
       - kind: Pod
-        name: ''
+        name: ""
         version: v1
       - kind: Secret
-        name: ''
+        name: ""
         version: v1
       - kind: Service
-        name: ''
+        name: ""
         version: v1
       - kind: StatefulSet
-        name: ''
+        name: ""
         version: apps/v1
       specDescriptors:
-      - description: 'The name of the Conjur account to be used.'
+      - description: The name of the Conjur account to be used.
         displayName: Account
         path: account
         x-descriptors:
-          - 'urn:alm:descriptor:com.tectonic.ui:text'
+        - urn:alm:descriptor:com.tectonic.ui:text
       statusDescriptors:
-      - description: 'Phase is a simple, high-level summary of where the Conjur is in its lifecycle.'
+      - description: Phase is a simple, high-level summary of where the Conjur is in its lifecycle.
         displayName: Phase
         path: phase
         x-descriptors:
-        - 'urn:alm:descriptor:com.tectonic.ui:text'
+        - urn:alm:descriptor:com.tectonic.ui:text
+      version: v1alpha1
   description: |
     ## Overview
 
@@ -88,14 +88,14 @@ spec:
       deployments: null
     strategy: ""
   installModes:
-  - type: OwnNamespace
-    supported: true
-  - type: SingleNamespace
-    supported: true
-  - type: MultiNamespace
-    supported: false
-  - type: AllNamespaces 
-    supported: false
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: false
+    type: AllNamespaces
   keywords:
   - security
   links:
