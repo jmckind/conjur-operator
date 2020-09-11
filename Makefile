@@ -71,10 +71,12 @@ generate: controller-gen
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
 # Build the container image
+.PHONY: image-build
 image-build: test
 	podman build . -t ${IMG}
 
 # Push the container image
+.PHONY: image-push
 image-push:
 	podman push ${IMG}
 
@@ -119,9 +121,14 @@ bundle: manifests
 	operator-sdk bundle validate ./bundle
 
 # Build the bundle image.
-.PHONY: bundle-build
-bundle-build:
+.PHONY: bundle-image-build
+bundle-image-build:
 	podman build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+
+# Push the bundle image.
+.PHONY: bundle-image-push
+bundle-image-push:
+	podman push $(BUNDLE_IMG)
 
 # Clean the cluster of Conjur resources
 .PHONY: cluster-clean
